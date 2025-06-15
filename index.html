@@ -7,20 +7,20 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #fff8f0;
+      background: #f1f8e9;
       color: #333;
       max-width: 700px;
       margin: auto;
       padding: 20px;
     }
     h1 {
-      color: #c62828;
+      color: #8bc34a;
     }
     .question {
       margin-bottom: 20px;
     }
     button {
-      background: #c62828;
+      background: #8bc34a;
       color: white;
       border: none;
       padding: 10px 20px;
@@ -38,5 +38,82 @@
 <body>
   <h1>¿Qué nivel de asco estás sintiendo ahora?</h1>
   <form id="testForm"></form>
-  <button onclick="calcularResultado()" type="button">Ver resultado</button>
-  <div class="result" id
+  <button type="button" onclick="calcularResultado()">Ver resultado</button>
+  <div class="result" id="resultado"></div>
+
+  <script>
+    const preguntas = [
+      "¿Hay algo que te produce rechazo físico o emocional?",
+      "¿Sientes una incomodidad intensa al ver, oler o pensar en algo?",
+      "¿Tuviste ganas de alejarte de alguien o algo recientemente?",
+      "¿Sientes malestar en el cuerpo, como tensión en el estómago o asco físico?",
+      "¿Viste o escuchaste algo que sentiste como incorrecto o inmoral?",
+      "¿Tu cuerpo se tensó o hiciste una mueca sin darte cuenta?",
+      "¿Sientes que algo está 'fuera de lugar' o 'contaminado' para ti?",
+      "¿Te quedaste con una sensación desagradable después de una interacción o situación?",
+      "¿Hubo algo que quisiste “borrar” o “quitarte de encima” emocional o físicamente?",
+      "¿Has sentido una necesidad muy fuerte de rechazar o eliminar algo?"
+    ];
+
+    const opciones = [
+      ["No, en absoluto.","Un poco.","Sí, moderadamente.","Sí, bastante.","Sí, muchísimo."],
+      ["No me incomodó.","Algo leve.","Me desagradó.","Me resultó muy incómodo.","Me provocó una reacción física."],
+      ["No, para nada.","Sí, pero leve.","Quise alejarme un poco.","Me alejé sin dudar.","Sentí urgencia por escapar."],
+      ["No tuve reacción física.","Un poco de tensión.","Sí, algo de malestar.","Mucho malestar físico.","Sí, nauseas o sensación de vómito."],
+      ["No lo viví así.","Me pareció raro.","Me incomodó moralmente.","Me indignó.","Me afectó profundamente."],
+      ["No noté nada.","Una vez quizás.","Sí, algunas veces.","Muchas veces.","Todo el cuerpo reaccionó."],
+      ["No lo veo así.","Tal vez un poco.","Sí, sentí algo fuera de lugar.","Sí, muy fuera de lugar.","Como si todo estuviera contaminado."],
+      ["No, todo estuvo bien.","Una interacción me dejó incómodo/a.","Sí, varias veces.","Sí, no lo supero aún.","Sí, me dejó una carga emocional muy fuerte."],
+      ["No, en ningún momento.","Un poco.","Sí, varias veces.","Sí, como una urgencia.","Sí, como si algo me invadiera."],
+      ["No lo sentí.","Tal vez una vez.","Sí, moderadamente.","Sí, fue intenso.","Sí, fue insoportable."]
+    ];
+
+    const form = document.getElementById("testForm");
+    preguntas.forEach((pregunta, i) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `<p>${i + 1}. ${pregunta}</p>`;
+      opciones[i].forEach((op, j) => {
+        div.innerHTML += `<label><input type="radio" name="p${i}" value="${j + 1}"> ${op}</label><br>`;
+      });
+      form.appendChild(div);
+    });
+
+    function calcularResultado() {
+      let total = 0;
+      for (let i = 0; i < preguntas.length; i++) {
+        const respuesta = document.querySelector(`input[name="p${i}"]:checked`);
+        if (respuesta) {
+          total += parseInt(respuesta.value);
+        }
+      }
+
+      let resultado = "";
+      let urlConsejo = "";
+
+      if (total <= 16) {
+        resultado = "Nivel: Desagrado / Rechazo leve";
+        urlConsejo = "consejos-nivel1.html";
+      } else if (total <= 24) {
+        resultado = "Nivel: Repulsión";
+        urlConsejo = "consejos-nivel2.html";
+      } else if (total <= 32) {
+        resultado = "Nivel: Asco claro";
+        urlConsejo = "consejos-nivel3.html";
+      } else if (total <= 40) {
+        resultado = "Nivel: Náusea / Aversión profunda";
+        urlConsejo = "consejos-nivel4.html";
+      } else {
+        resultado = "Nivel: Horror moral / Contaminación emocional";
+        urlConsejo = "consejos-nivel5.html";
+      }
+
+      document.getElementById("resultado").innerText = resultado;
+
+      setTimeout(() => {
+        window.location.href = urlConsejo;
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
